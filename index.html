@@ -384,177 +384,183 @@
 
 <div class="divider"></div>
 
+<!-- SECTION 3 — ORBIT / SEASONS -->
 <section>
-  <div class="section-title">🪐 第三部分：地球公轉 — 北半球四季</div>
+  <div class="section-title">🪐 第三部分：地球公轉 — 為什麼有四季？</div>
 
   <div class="orbit-scene">
     <canvas id="orbitBgCanvas" style="position:absolute;inset:0;pointer-events:none;z-index:0"></canvas>
 
-    <!-- Big clear orbit diagram -->
-    <div class="od-wrap">
-
-      <!-- Centre sun -->
-      <div class="od-sun-big">☀️<div class="od-sun-label">太陽</div></div>
-
-      <!-- SVG orbit ring -->
-      <svg class="od-ring-svg" viewBox="0 0 400 400">
-        <ellipse cx="200" cy="200" rx="178" ry="130"
-          fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2.5" stroke-dasharray="10 6"/>
-        <!-- direction arrows -->
-        <polygon points="238,74 222,60 228,82" fill="rgba(255,255,255,0.6)"/>
-        <polygon points="162,326 178,340 172,318" fill="rgba(255,255,255,0.6)"/>
-      </svg>
-
-      <!-- SPRING — top -->
-      <div class="od-pos" style="top:16px;left:50%;transform:translateX(-50%)">
-        <div class="od-season-tag" style="color:#6ee86e;border-color:#6ee86e">春季 🌸</div>
-        <div class="od-globe-wrap">
-          <div class="od-emoji">🌏</div>
-          <div class="od-night-mask" style="background:linear-gradient(105deg, transparent 45%, rgba(0,0,0,0.92) 55%)"></div>
-          <div class="od-axisline"></div>
+    <!-- Space view -->
+    <div class="s3-space">
+      <!-- Sun -->
+      <div class="s3-sun">
+        <div class="s3-sun-emoji">☀️</div>
+        <div class="s3-sun-label">太陽</div>
+      </div>
+      <!-- Orbit ring -->
+      <div class="s3-ring"></div>
+      <!-- Earth -->
+      <div class="s3-earth-wrap" id="s3Earth">
+        <div class="s3-axis"></div>
+        <div class="s3-globe">
+          <div class="s3-north">北</div>
+          <div class="s3-equator"></div>
+          <div class="s3-south">南</div>
+          <div class="s3-hk">🔴<span class="s3-hk-label">香港</span></div>
         </div>
-        <div class="od-hint">陽光斜射</div>
       </div>
+    </div>
 
-      <!-- SUMMER — left -->
-      <div class="od-pos" style="top:50%;left:10px;transform:translateY(-50%)">
-        <div class="od-season-tag" style="color:#ffaa33;border-color:#ffaa33">夏季 ☀️</div>
-        <div class="od-globe-wrap">
-          <div class="od-emoji">🌏</div>
-          <div class="od-night-mask" style="background:linear-gradient(195deg, transparent 45%, rgba(0,0,0,0.92) 55%)"></div>
-          <div class="od-axisline"></div>
-        </div>
-        <div class="od-hint">北極朝太陽🔆<br>最多陽光</div>
-      </div>
+    <!-- Season info box -->
+    <div class="s3-infobox" id="s3Info">
+      <div class="s3-info-text" id="s3Text">👆 拖動滑桿，觀察地球公轉！</div>
+    </div>
 
-      <!-- AUTUMN — bottom -->
-      <div class="od-pos od-pos-bot" style="bottom:16px;left:50%;transform:translateX(-50%)">
-        <div class="od-hint">陽光斜射</div>
-        <div class="od-globe-wrap">
-          <div class="od-emoji">🌏</div>
-          <div class="od-night-mask" style="background:linear-gradient(105deg, transparent 45%, rgba(0,0,0,0.92) 55%)"></div>
-          <div class="od-axisline"></div>
-        </div>
-        <div class="od-season-tag" style="color:#ffcc44;border-color:#ffcc44">秋季 🍂</div>
-      </div>
-
-      <!-- WINTER — right -->
-      <div class="od-pos" style="top:50%;right:10px;transform:translateY(-50%)">
-        <div class="od-season-tag" style="color:#88ccff;border-color:#88ccff">冬季 ❄️</div>
-        <div class="od-globe-wrap">
-          <div class="od-emoji">🌏</div>
-          <div class="od-night-mask" style="background:linear-gradient(285deg, transparent 45%, rgba(0,0,0,0.92) 55%)"></div>
-          <div class="od-axisline"></div>
-        </div>
-        <div class="od-hint">北極背太陽🔅<br>最少陽光</div>
-      </div>
-
-    </div><!-- /od-wrap -->
-
-    <!-- Simple season cards -->
-    <div class="od-cards">
-      <div class="od-card" style="border-color:#6ee86e;background:rgba(80,200,80,.1)">
-        <div style="font-size:1.8rem">🌸</div>
-        <div class="od-card-name" style="color:#6ee86e">春季</div>
-        <div class="od-card-desc">溫暖<br>萬物生長</div>
-      </div>
-      <div class="od-card" style="border-color:#ffaa33;background:rgba(255,160,40,.1)">
-        <div style="font-size:1.8rem">☀️</div>
-        <div class="od-card-name" style="color:#ffaa33">夏季</div>
-        <div class="od-card-desc">炎熱<br>日長夜短</div>
-      </div>
-      <div class="od-card" style="border-color:#ffcc44;background:rgba(255,200,50,.1)">
-        <div style="font-size:1.8rem">🍂</div>
-        <div class="od-card-name" style="color:#ffcc44">秋季</div>
-        <div class="od-card-desc">涼爽<br>樹葉變色</div>
-      </div>
-      <div class="od-card" style="border-color:#88ccff;background:rgba(100,160,255,.1)">
-        <div style="font-size:1.8rem">❄️</div>
-        <div class="od-card-name" style="color:#88ccff">冬季</div>
-        <div class="od-card-desc">寒冷<br>日短夜長</div>
+    <!-- Slider -->
+    <div class="orbit-controls">
+      <div class="e-slider-row">
+        <span class="e-lbl">🌸 春</span>
+        <input type="range" id="orbitSlider" min="0" max="360" value="0">
+        <span class="e-lbl">🔄</span>
       </div>
     </div>
 
     <div class="concept-box">
-      💡 地球用 <strong>365 天</strong>繞太陽轉一圈。<br>
-      因為地球係<strong>傾斜</strong>咁轉，唔同時候北半球受到嘅陽光多少唔同，所以有<strong>春夏秋冬</strong>四季！
+      💡 <strong>地球公轉</strong>：地球用 <strong>365 天</strong>繞太陽轉一圈。<br>
+      因為地球係<strong>傾斜 23.5°</strong> 咁轉，北半球同南半球接受嘅陽光唔同，所以有四季，而且<strong>南北半球季節相反</strong>！
     </div>
   </div>
 </section>
 
 <style>
   .orbit-scene{width:min(680px,96vw);background:#070e1a;border-radius:16px;
-    box-shadow:0 20px 60px rgba(0,0,0,.6);padding:28px 16px 32px;
-    display:flex;flex-direction:column;align-items:center;gap:22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);padding:28px 20px 32px;
+    display:flex;flex-direction:column;align-items:center;gap:20px;
     position:relative;overflow:hidden}
 
-  /* Orbit diagram wrapper */
-  .od-wrap{position:relative;width:min(400px,94vw);height:360px;flex-shrink:0;z-index:1}
-  .od-ring-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  /* Space area */
+  .s3-space{position:relative;width:300px;height:300px;flex-shrink:0;z-index:1}
+
+  /* Orbit ring */
+  .s3-ring{position:absolute;inset:0;border-radius:50%;
+    border:2px dashed rgba(255,255,255,0.2)}
 
   /* Sun */
-  .od-sun-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    font-size:56px;z-index:3;text-align:center;
-    filter:drop-shadow(0 0 20px rgba(255,210,50,.9));
-    animation:pulse 3s ease-in-out infinite}
-  .od-sun-label{font-size:.75rem;font-weight:700;color:rgba(255,220,80,.8);
-    margin-top:-6px;letter-spacing:.08em}
+  .s3-sun{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    text-align:center;z-index:3}
+  .s3-sun-emoji{font-size:52px;filter:drop-shadow(0 0 18px rgba(255,210,50,.8));
+    animation:pulse 3s ease-in-out infinite;display:block}
+  .s3-sun-label{font-size:.75rem;font-weight:700;color:rgba(255,220,80,.8);
+    margin-top:-4px;letter-spacing:.08em}
 
-  /* Earth positions */
-  .od-pos{position:absolute;display:flex;flex-direction:column;
-    align-items:center;gap:6px;z-index:4}
-  .od-pos-bot{flex-direction:column-reverse}
-
-  /* Globe */
-  .od-globe-wrap{position:relative;width:66px;height:66px;flex-shrink:0}
-  .od-emoji{position:absolute;inset:0;display:flex;align-items:center;
-    justify-content:center;font-size:60px;line-height:1;z-index:2;
-    transform:rotate(23.5deg)}
-
-  /* Night mask — strong dark half */
-  .od-night-mask{position:absolute;inset:-2px;border-radius:50%;z-index:3;pointer-events:none}
+  /* Earth wrapper — positioned by JS */
+  .s3-earth-wrap{position:absolute;width:56px;height:56px;
+    transform:translate(-50%,-50%);z-index:4}
 
   /* Tilt axis */
-  .od-axisline{position:absolute;left:50%;top:-14px;width:3px;height:94px;
-    transform:translateX(-50%) rotate(23.5deg);transform-origin:center center;
+  .s3-axis{position:absolute;left:50%;top:-12px;
+    width:3px;height:80px;
+    transform:translateX(-50%) rotate(-23deg);
+    transform-origin:center center;
     background:linear-gradient(to bottom,
-      rgba(180,215,255,1) 0%,rgba(180,215,255,.5) 20%,
-      rgba(180,215,255,.5) 80%,rgba(180,215,255,1) 100%);
+      rgba(180,215,255,1),rgba(180,215,255,.4) 25%,
+      rgba(180,215,255,.4) 75%,rgba(180,215,255,1));
     border-radius:2px;z-index:5}
-  .od-axisline::before,.od-axisline::after{content:'';position:absolute;
+  .s3-axis::before,.s3-axis::after{content:'';position:absolute;
     left:50%;transform:translateX(-50%);
-    border-left:5px solid transparent;border-right:5px solid transparent}
-  .od-axisline::before{top:-5px;border-bottom:8px solid rgba(180,215,255,1)}
-  .od-axisline::after{bottom:-5px;border-top:8px solid rgba(180,215,255,1)}
+    border-left:4px solid transparent;border-right:4px solid transparent}
+  .s3-axis::before{top:-5px;border-bottom:7px solid rgba(180,215,255,1)}
+  .s3-axis::after{bottom:-5px;border-top:7px solid rgba(180,215,255,1)}
 
-  /* Season tag badge */
-  .od-season-tag{font-size:.9rem;font-weight:900;padding:3px 10px;
-    border-radius:20px;border:2px solid;letter-spacing:.04em;
-    background:rgba(0,0,0,.3);white-space:nowrap}
+  /* Globe */
+  .s3-globe{position:absolute;inset:0;border-radius:50%;
+    background:linear-gradient(180deg,#4499ee 50%,#2266bb 50%);
+    border:2.5px solid rgba(255,255,255,0.7);
+    overflow:hidden;z-index:2;
+    box-shadow:0 0 14px rgba(77,160,255,.5)}
 
-  /* Hint text */
-  .od-hint{font-size:.72rem;opacity:.7;text-align:center;line-height:1.5}
+  /* North / South labels */
+  .s3-north,.s3-south{position:absolute;left:50%;transform:translateX(-50%);
+    font-size:.7rem;font-weight:900;color:#fff;
+    text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:3;white-space:nowrap}
+  .s3-north{top:3px}
+  .s3-south{bottom:3px}
 
-  /* Cards */
-  .od-cards{display:flex;gap:10px;width:100%;justify-content:center;flex-wrap:wrap;z-index:1}
-  .od-card{flex:1;min-width:120px;max-width:150px;border-radius:14px;border:2px solid;
-    padding:14px 8px;text-align:center}
-  .od-card-name{font-size:1.1rem;font-weight:900;margin:4px 0 3px}
-  .od-card-desc{font-size:.75rem;opacity:.65;line-height:1.6}
+  /* Equator line */
+  .s3-equator{position:absolute;left:0;right:0;top:50%;height:2px;
+    background:rgba(255,255,255,0.5);z-index:3;margin-top:-1px}
+
+  /* HK dot */
+  .s3-hk{position:absolute;top:44%;left:64%;
+    transform:translate(-50%,-50%);z-index:6;
+    font-size:.6rem;display:flex;align-items:center;gap:2px}
+  .s3-hk-label{font-size:.6rem;font-weight:900;color:#fff;
+    text-shadow:0 0 5px rgba(255,60,60,.9),0 1px 3px #000;
+    white-space:nowrap}
+
+  /* Info box */
+  .s3-infobox{width:100%;padding:16px 20px;border-radius:14px;
+    background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);
+    text-align:center;z-index:1;min-height:60px;
+    display:flex;align-items:center;justify-content:center}
+  .s3-info-text{font-size:1rem;line-height:1.7;font-weight:500}
+
+  /* Season colours applied via JS */
+  .s3-infobox.summer-n{border-color:rgba(255,140,40,.5);background:rgba(255,100,20,.1)}
+  .s3-infobox.winter-n{border-color:rgba(100,160,255,.5);background:rgba(80,130,255,.1)}
+  .s3-infobox.spring-autumn{border-color:rgba(100,220,100,.4);background:rgba(60,180,60,.08)}
+
+  .orbit-controls{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:1}
+  input[type=range]#orbitSlider::-webkit-slider-thumb{background:#4caf50;box-shadow:0 2px 12px rgba(76,175,80,.5)}
 </style>
 
 <script>
 (function(){
+  // Stars bg
   const cvs = document.getElementById('orbitBgCanvas');
-  if(!cvs) return;
-  const p=cvs.parentElement;
-  cvs.width=p.offsetWidth; cvs.height=p.offsetHeight;
-  const ctx=cvs.getContext('2d');
-  for(let i=0;i<90;i++){
-    const x=Math.random()*cvs.width, y=Math.random()*cvs.height;
-    const r=Math.random()*1.1+0.2, a=Math.random()*0.4+0.15;
-    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
+  if(cvs){
+    const p=cvs.parentElement;cvs.width=p.offsetWidth;cvs.height=p.offsetHeight;
+    const ctx=cvs.getContext('2d');
+    for(let i=0;i<90;i++){
+      const x=Math.random()*cvs.width,y=Math.random()*cvs.height;
+      const r=Math.random()*1.1+0.2,a=Math.random()*0.4+0.15;
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fill();
+    }
+  }
+
+  const slider  = document.getElementById('orbitSlider');
+  const earthEl = document.getElementById('s3Earth');
+  const infoBox = document.getElementById('s3Info');
+  const infoTxt = document.getElementById('s3Text');
+
+  const CX=150, CY=150, RX=120, RY=100;
+
+  function update(){
+    const angle = +slider.value;
+    const rad = (angle - 90) * Math.PI / 180;
+    const ex = CX + Math.cos(rad) * RX;
+    const ey = CY + Math.sin(rad) * RY;
+    earthEl.style.left = ex + 'px';
+    earthEl.style.top  = ey + 'px';
+
+    // Season logic (same as original code logic)
+    if(angle > 45 && angle < 135){
+      infoBox.className = 's3-infobox summer-n';
+      infoTxt.innerHTML = '☀️ <strong style="color:#ffaa33">北半球：夏季</strong>（陽光直射）<br>❄️ <strong style="color:#88ccff">南半球：冬季</strong>（陽光斜射）';
+    } else if(angle > 225 && angle < 315){
+      infoBox.className = 's3-infobox winter-n';
+      infoTxt.innerHTML = '❄️ <strong style="color:#88ccff">北半球：冬季</strong>（陽光斜射）<br>☀️ <strong style="color:#ffaa33">南半球：夏季</strong>（陽光直射）';
+    } else {
+      infoBox.className = 's3-infobox spring-autumn';
+      infoTxt.innerHTML = '🌸🍂 <strong style="color:#7edb7e">春季或秋季</strong>：南北半球受熱差唔多';
+    }
+  }
+
+  if(slider){
+    slider.addEventListener('input', update);
+    requestAnimationFrame(update);
   }
 })();
 </script>
