@@ -116,9 +116,30 @@
 <body>
 
 <div class="page-header">
+  <div class="school-name">香港真光中學附屬小學暨幼稚園</div>
+  <div class="grade-label">小四科學科</div>
   <h1>☀️ 太陽、影子與地球自轉</h1>
   <p>拖動下面的滑桿，一起探索！</p>
 </div>
+
+<style>
+  .school-name{
+    font-size:clamp(1rem,3.5vw,1.4rem);
+    font-weight:900;
+    letter-spacing:.08em;
+    color:#f5efe6;
+    text-align:center;
+  }
+  .grade-label{
+    font-size:clamp(.85rem,2.5vw,1.05rem);
+    font-weight:700;
+    letter-spacing:.15em;
+    color:rgba(244,164,74,.85);
+    text-align:center;
+    margin-top:4px;
+    margin-bottom:6px;
+  }
+</style>
 
 <section>
   <div class="section-title">🌤️ 第一部分：太陽和影子</div>
@@ -186,12 +207,10 @@
       </svg>
       <div class="earth-wrap">
         <div id="earth">
-          <!-- Rotating surface -->
           <div id="earthSurface">
             <div class="e-emoji">🌏</div>
             <div class="hk-dot" id="hkDot"><span class="hk-dot-label">香港</span></div>
           </div>
-          <!-- Fixed night overlay -->
           <div class="e-night"></div>
         </div>
         <div class="earth-label">地球</div>
@@ -215,8 +234,6 @@
     </div>
   </div>
 </section>
-
-<div class="page-footer">小學常識科 · 互動學習</div>
 
 <script>
 (function() {
@@ -249,20 +266,18 @@
     document.getElementById('timeDisplay').textContent =
       ampm + ' ' + String(h12) + ':' + String(mInt).padStart(2,'0');
 
-    const sunX = 1 - (M/W + t*(W-2*M)/W); // Sun rises in east (RIGHT) sets in west (LEFT)
+    const sunX = 1 - (M/W + t*(W-2*M)/W);
     const arcT = 4*t*(1-t);
     const sunY = (H+10) - arcT*((H+10)-30);
     sunEl.style.left = (sunX*100)+'%';
     sunEl.style.top  = sunY+'px';
     sunEl.style.opacity = sunY > H-8 ? '0' : '1';
 
-    const fromCenter = t - 0.5; // -0.5 morning, 0 noon, +0.5 evening
-
-    // Shadow: wide ellipse, shifts left/right, gets longer at edges
-    const shadowW = 100 + (1 - arcT) * 160; // 100px noon → 260px edges
+    const fromCenter = t - 0.5;
+    const shadowW = 100 + (1 - arcT) * 160;
     const shadowH = 14 + (1 - arcT) * 6;
-    const shiftX  = fromCenter * 140; // shift away from sun
-    const skewDeg = fromCenter * 25; // shadow leans away from sun
+    const shiftX  = fromCenter * 140;
+    const skewDeg = fromCenter * 25;
 
     if (arcT < 0.03) {
       shadowEl.style.opacity = '0';
@@ -274,7 +289,6 @@
       shadowEl.style.transform = `translateX(-50%) skewX(${skewDeg}deg)`;
     }
 
-    // Fact labels
     const altitude = arcT * 90;
     document.getElementById('shadowLen').textContent =
       arcT > 0.85 ? '最短 📏' : arcT > 0.5 ? '短 📏' : arcT > 0.2 ? '中等 📏' : '最長 📏';
@@ -301,7 +315,6 @@
       tipEl.innerHTML='🌆 傍晚太陽在西邊，同學嘅影子指向東邊，影子又長了！';
     }
 
-    // Sky colours
     let sT,sB,gC,gD;
     if(arcT<0.05){
       const n=arcT/0.05;
@@ -336,7 +349,9 @@
   slider.addEventListener('input', update);
   update();
 })();
+</script>
 
+<script>
 (function() {
   const cvs = document.getElementById('earthCanvas');
   function drawStars(){
@@ -355,20 +370,12 @@
   const hkDot=document.getElementById('hkDot');
   const statusBox=document.getElementById('statusBox');
   const statusTxt=document.getElementById('statusText');
-  const cityLight=document.getElementById('cityLights');
   function update(){
     const deg=+slider.value;
-    // Only rotate the surface, night overlay stays fixed
     document.getElementById('earthSurface').style.transform=`rotate(${deg}deg)`;
-    // Keep HK label upright
     hkDot.style.transform=`translate(-50%,-50%) rotate(${-deg}deg)`;
-    // HK dot angle on earth: base ~15deg (right of center), rotated by deg
-    // HK is on day side when it's on the LEFT half of earth (facing sun)
-    // HK base position is at ~62% left = slightly right of center = ~15deg from right
-    // After rotation deg, HK absolute angle from right = deg + 15
-    // Day when HK is on left half: angle 90..270 from right = 75..255 from deg=0
-    const hkAngle = (deg + 15) % 360;
-    const isNight = !(hkAngle >= 90 && hkAngle <= 270);
+    const hkAngle=(deg+15)%360;
+    const isNight=!(hkAngle>=90&&hkAngle<=270);
     if(isNight){
       statusBox.className='status-box night';
       statusTxt.textContent='香港現在是黑夜！🌙';
@@ -379,12 +386,11 @@
   }
   slider.addEventListener('input',update);update();
 })();
-
 </script>
 
 <div class="divider"></div>
 
-<!-- SECTION 3 — ORBIT / SEASONS -->
+<!-- SECTION 3 — ORBIT / SEASONS + HK vs AUS GAME -->
 <section>
   <div class="section-title">🪐 第三部分：地球公轉 — 為什麼有四季？</div>
 
@@ -393,14 +399,11 @@
 
     <!-- Space view -->
     <div class="s3-space">
-      <!-- Sun -->
       <div class="s3-sun">
         <div class="s3-sun-emoji">☀️</div>
         <div class="s3-sun-label">太陽</div>
       </div>
-      <!-- Orbit ring -->
       <div class="s3-ring"></div>
-      <!-- Earth -->
       <div class="s3-earth-wrap" id="s3Earth">
         <div class="s3-axis"></div>
         <div class="s3-globe">
@@ -408,22 +411,59 @@
           <div class="s3-equator"></div>
           <div class="s3-south">南</div>
           <div class="s3-hk">🔴<span class="s3-hk-label">香港</span></div>
+          <div class="s3-aus">🟡<span class="s3-aus-label">澳洲</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Season info box -->
+    <!-- Month badge -->
+    <div class="s3-month-badge" id="s3Month">📅 約 3月</div>
+
+    <!-- Slider (directly below space view) -->
+    <div class="orbit-controls" style="width:min(320px,94vw)">
+      <div class="e-slider-row">
+        <span class="e-lbl">🌸 3月</span>
+        <input type="range" id="orbitSlider" min="0" max="360" value="0">
+        <span class="e-lbl">🔄 一圈</span>
+      </div>
+    </div>
+
+    <!-- Info box — directly below slider -->
     <div class="s3-infobox" id="s3Info">
       <div class="s3-info-text" id="s3Text">👆 拖動滑桿，觀察地球公轉！</div>
     </div>
 
-    <!-- Slider -->
-    <div class="orbit-controls">
-      <div class="e-slider-row">
-        <span class="e-lbl">🌸 春</span>
-        <input type="range" id="orbitSlider" min="0" max="360" value="0">
-        <span class="e-lbl">🔄</span>
+    <!-- Season comparison cards -->
+    <div class="s3-compare">
+      <div class="s3-compare-card" id="hkCard">
+        <div class="s3-compare-flag">🇭🇰</div>
+        <div class="s3-compare-place">香港</div>
+        <div class="s3-compare-season" id="hkSeason">🌸 春季</div>
+        <div class="s3-compare-desc" id="hkDesc">氣候溫和</div>
       </div>
+
+      <div class="s3-compare-vs">VS</div>
+
+      <div class="s3-compare-card" id="ausCard">
+        <div class="s3-compare-flag">🇦🇺</div>
+        <div class="s3-compare-place">澳洲</div>
+        <div class="s3-compare-season" id="ausSeason">🍂 秋季</div>
+        <div class="s3-compare-desc" id="ausDesc">氣候涼爽</div>
+      </div>
+    </div>
+
+    <!-- Fun fact banner -->
+    <div class="s3-funfact" id="s3Funfact">
+      🤔 香港同澳洲係唔同季節，因為佢哋喺赤道嘅兩邊！
+    </div>
+
+    <!-- GAME section -->
+    <div class="s3-game-wrap">
+      <div class="s3-game-title">🎮 季節猜猜猜！</div>
+      <div class="s3-game-question" id="gameQuestion">拖動上面滑桿到指定月份，再猜猜香港同澳洲各係咩季節！</div>
+      <div id="gameChoices" class="s3-game-choices"></div>
+      <div id="gameFeedback" class="s3-game-feedback" style="display:none"></div>
+      <button id="gameNextBtn" class="s3-game-next" style="display:none" onclick="nextQuestion()">下一題 →</button>
     </div>
 
     <div class="concept-box">
@@ -436,77 +476,87 @@
 <style>
   .orbit-scene{width:min(680px,96vw);background:#070e1a;border-radius:16px;
     box-shadow:0 20px 60px rgba(0,0,0,.6);padding:28px 20px 32px;
-    display:flex;flex-direction:column;align-items:center;gap:20px;
+    display:flex;flex-direction:column;align-items:center;gap:18px;
     position:relative;overflow:hidden}
 
-  /* Space area */
-  .s3-space{position:relative;width:300px;height:300px;flex-shrink:0;z-index:1}
-
-  /* Orbit ring */
-  .s3-ring{position:absolute;inset:0;border-radius:50%;
-    border:2px dashed rgba(255,255,255,0.2)}
-
-  /* Sun */
-  .s3-sun{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    text-align:center;z-index:3}
-  .s3-sun-emoji{font-size:52px;filter:drop-shadow(0 0 18px rgba(255,210,50,.8));
-    animation:pulse 3s ease-in-out infinite;display:block}
-  .s3-sun-label{font-size:.75rem;font-weight:700;color:rgba(255,220,80,.8);
-    margin-top:-4px;letter-spacing:.08em}
-
-  /* Earth wrapper — positioned by JS */
-  .s3-earth-wrap{position:absolute;width:56px;height:56px;
-    transform:translate(-50%,-50%);z-index:4}
-
-  /* Tilt axis */
-  .s3-axis{position:absolute;left:50%;top:-12px;
-    width:3px;height:80px;
-    transform:translateX(-50%) rotate(-23deg);
-    transform-origin:center center;
-    background:linear-gradient(to bottom,
-      rgba(180,215,255,1),rgba(180,215,255,.4) 25%,
-      rgba(180,215,255,.4) 75%,rgba(180,215,255,1));
+  .s3-space{position:relative;width:320px;height:320px;flex-shrink:0;z-index:1;margin:0 auto}
+  .s3-ring{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(255,255,255,0.2)}
+  .s3-sun{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:3}
+  .s3-sun-emoji{font-size:48px;filter:drop-shadow(0 0 18px rgba(255,210,50,.8));animation:pulse 3s ease-in-out infinite;display:block}
+  .s3-sun-label{font-size:.72rem;font-weight:700;color:rgba(255,220,80,.8);margin-top:-4px}
+  .s3-earth-wrap{position:absolute;width:104px;height:104px;transform:translate(-50%,-50%);z-index:4}
+  .s3-axis{position:absolute;left:50%;top:-16px;width:4px;height:136px;
+    transform:translateX(-50%) rotate(-23deg);transform-origin:center center;
+    background:linear-gradient(to bottom,rgba(180,215,255,1),rgba(180,215,255,.4) 25%,rgba(180,215,255,.4) 75%,rgba(180,215,255,1));
     border-radius:2px;z-index:5}
-  .s3-axis::before,.s3-axis::after{content:'';position:absolute;
-    left:50%;transform:translateX(-50%);
-    border-left:4px solid transparent;border-right:4px solid transparent}
-  .s3-axis::before{top:-5px;border-bottom:7px solid rgba(180,215,255,1)}
-  .s3-axis::after{bottom:-5px;border-top:7px solid rgba(180,215,255,1)}
-
-  /* Globe */
+  .s3-axis::before,.s3-axis::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent}
+  .s3-axis::before{top:-6px;border-bottom:9px solid rgba(180,215,255,1)}
+  .s3-axis::after{bottom:-6px;border-top:9px solid rgba(180,215,255,1)}
   .s3-globe{position:absolute;inset:0;border-radius:50%;
     background:linear-gradient(180deg,#4499ee 50%,#2266bb 50%);
-    border:2.5px solid rgba(255,255,255,0.7);
-    overflow:hidden;z-index:2;
-    box-shadow:0 0 14px rgba(77,160,255,.5)}
-
-  /* North / South labels */
+    border:3px solid rgba(255,255,255,0.7);overflow:hidden;z-index:2;
+    box-shadow:0 0 22px rgba(77,160,255,.6)}
   .s3-north,.s3-south{position:absolute;left:50%;transform:translateX(-50%);
-    font-size:.7rem;font-weight:900;color:#fff;
-    text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:3;white-space:nowrap}
-  .s3-north{top:3px}
-  .s3-south{bottom:3px}
+    font-size:.85rem;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:3}
+  .s3-north{top:4px}
+  .s3-south{bottom:4px}
+  .s3-equator{position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,0.5);z-index:3;margin-top:-1px}
+  .s3-hk{position:absolute;top:34%;left:64%;transform:translate(-50%,-50%);z-index:6;font-size:.75rem;display:flex;align-items:center;gap:2px}
+  .s3-hk-label{font-size:.72rem;font-weight:900;color:#fff;text-shadow:0 0 6px rgba(255,60,60,.9),0 1px 3px #000;white-space:nowrap}
+  .s3-aus{position:absolute;top:68%;left:68%;transform:translate(-50%,-50%);z-index:6;font-size:.75rem;display:flex;align-items:center;gap:2px}
+  .s3-aus-label{font-size:.72rem;font-weight:900;color:#ffe066;text-shadow:0 0 6px rgba(255,200,0,.9),0 1px 3px #000;white-space:nowrap}
 
-  /* Equator line */
-  .s3-equator{position:absolute;left:0;right:0;top:50%;height:2px;
-    background:rgba(255,255,255,0.5);z-index:3;margin-top:-1px}
+  /* Month badge */
+  .s3-month-badge{font-size:1.05rem;font-weight:900;padding:5px 18px;
+    border-radius:50px;background:rgba(255,255,255,.08);
+    border:1.5px solid rgba(255,255,255,.15);color:#f5efe6;letter-spacing:.05em}
 
-  /* HK dot */
-  .s3-hk{position:absolute;top:44%;left:64%;
-    transform:translate(-50%,-50%);z-index:6;
-    font-size:.6rem;display:flex;align-items:center;gap:2px}
-  .s3-hk-label{font-size:.6rem;font-weight:900;color:#fff;
-    text-shadow:0 0 5px rgba(255,60,60,.9),0 1px 3px #000;
-    white-space:nowrap}
+  /* Compare cards */
+  .s3-compare{display:flex;align-items:center;gap:14px;width:100%;z-index:1}
+  .s3-compare-card{flex:1;border-radius:16px;padding:16px 10px;text-align:center;
+    border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);
+    transition:all .4s}
+  .s3-compare-flag{font-size:2rem}
+  .s3-compare-place{font-size:.8rem;opacity:.6;margin:3px 0;font-weight:700;letter-spacing:.05em}
+  .s3-compare-season{font-size:1.2rem;font-weight:900;margin:4px 0}
+  .s3-compare-desc{font-size:.75rem;opacity:.6;line-height:1.4}
+  .s3-compare-vs{font-size:1.3rem;font-weight:900;color:rgba(255,255,255,.3);flex-shrink:0}
 
-  /* Info box */
-  .s3-infobox{width:100%;padding:16px 20px;border-radius:14px;
+  /* Card colour states */
+  .card-spring{border-color:rgba(100,220,100,.4)!important;background:rgba(60,180,60,.1)!important}
+  .card-summer{border-color:rgba(255,160,40,.4)!important;background:rgba(255,100,20,.1)!important}
+  .card-autumn{border-color:rgba(255,200,60,.4)!important;background:rgba(255,150,20,.1)!important}
+  .card-winter{border-color:rgba(100,160,255,.4)!important;background:rgba(80,130,255,.1)!important}
+
+  /* Fun fact */
+  .s3-funfact{width:100%;padding:10px 16px;border-radius:12px;
+    background:rgba(255,220,80,.08);border-left:4px solid rgba(255,220,80,.5);
+    font-size:.88rem;color:rgba(255,235,150,.9);line-height:1.6;z-index:1}
+
+  /* GAME */
+  .s3-game-wrap{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);
+    border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:12px;z-index:1}
+  .s3-game-title{font-size:1rem;font-weight:900;letter-spacing:.05em;color:#f4a44a}
+  .s3-game-question{font-size:.92rem;line-height:1.6;color:#f5efe6}
+  .s3-game-choices{display:flex;flex-wrap:wrap;gap:8px}
+  .s3-choice-btn{flex:1;min-width:120px;padding:10px 8px;border-radius:12px;
+    border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);
+    color:#f5efe6;font-size:.85rem;font-weight:700;cursor:pointer;
+    font-family:inherit;transition:all .2s;text-align:center}
+  .s3-choice-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)}
+  .s3-choice-btn.correct{background:rgba(60,180,60,.25);border-color:#4caf50;color:#a5d6a7}
+  .s3-choice-btn.wrong{background:rgba(200,40,40,.2);border-color:#ef5350;color:#ef9a9a}
+  .s3-game-feedback{padding:12px 16px;border-radius:12px;font-size:.92rem;font-weight:700;line-height:1.6}
+  .s3-game-feedback.correct{background:rgba(60,180,60,.15);border:1.5px solid #4caf50;color:#a5d6a7}
+  .s3-game-feedback.wrong{background:rgba(200,40,40,.12);border:1.5px solid #ef5350;color:#ef9a9a}
+  .s3-game-next{padding:10px 24px;border-radius:50px;border:1.5px solid rgba(244,164,74,.4);
+    background:rgba(244,164,74,.12);color:#f4a44a;font-size:.9rem;font-weight:700;
+    cursor:pointer;font-family:inherit;align-self:flex-end}
+
+  .s3-infobox{width:100%;padding:14px 18px;border-radius:14px;
     background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);
-    text-align:center;z-index:1;min-height:60px;
-    display:flex;align-items:center;justify-content:center}
-  .s3-info-text{font-size:1rem;line-height:1.7;font-weight:500}
-
-  /* Season colours applied via JS */
+    text-align:center;z-index:1;display:flex;align-items:center;justify-content:center}
+  .s3-info-text{font-size:.95rem;line-height:1.7;font-weight:500}
   .s3-infobox.summer-n{border-color:rgba(255,140,40,.5);background:rgba(255,100,20,.1)}
   .s3-infobox.winter-n{border-color:rgba(100,160,255,.5);background:rgba(80,130,255,.1)}
   .s3-infobox.spring-autumn{border-color:rgba(100,220,100,.4);background:rgba(60,180,60,.08)}
@@ -517,7 +567,6 @@
 
 <script>
 (function(){
-  // Stars bg
   const cvs = document.getElementById('orbitBgCanvas');
   if(cvs){
     const p=cvs.parentElement;cvs.width=p.offsetWidth;cvs.height=p.offsetHeight;
@@ -534,8 +583,37 @@
   const earthEl = document.getElementById('s3Earth');
   const infoBox = document.getElementById('s3Info');
   const infoTxt = document.getElementById('s3Text');
+  const CX=160, CY=160, RX=125, RY=105;
 
-  const CX=150, CY=150, RX=120, RY=100;
+  // Month data: angle 0 = March equinox (spring), clockwise
+  const monthData = [
+    {a:0,   m:'3月（春分）',  hkS:'spring', ausS:'autumn'},
+    {a:30,  m:'4月',          hkS:'spring', ausS:'autumn'},
+    {a:60,  m:'5月',          hkS:'spring', ausS:'autumn'},
+    {a:90,  m:'6月（夏至）',  hkS:'summer', ausS:'winter'},
+    {a:120, m:'7月',          hkS:'summer', ausS:'winter'},
+    {a:150, m:'8月',          hkS:'summer', ausS:'winter'},
+    {a:180, m:'9月（秋分）',  hkS:'autumn', ausS:'spring'},
+    {a:210, m:'10月',         hkS:'autumn', ausS:'spring'},
+    {a:240, m:'11月',         hkS:'autumn', ausS:'spring'},
+    {a:270, m:'12月（冬至）', hkS:'winter', ausS:'summer'},
+    {a:300, m:'1月',          hkS:'winter', ausS:'summer'},
+    {a:330, m:'2月',          hkS:'winter', ausS:'summer'},
+  ];
+
+  const seasonInfo = {
+    spring: {icon:'🌸', name:'春季', desc:'陽光斜射，氣候溫和', cls:'card-spring'},
+    summer: {icon:'☀️', name:'夏季', desc:'陽光直射，天氣炎熱', cls:'card-summer'},
+    autumn: {icon:'🍂', name:'秋季', desc:'陽光斜射，氣候涼爽', cls:'card-autumn'},
+    winter: {icon:'❄️', name:'冬季', desc:'陽光最少，天氣寒冷', cls:'card-winter'},
+  };
+
+  const funFacts = {
+    spring: '🤔 香港係春季時，澳洲係秋季——南北半球季節完全相反！',
+    summer: '🏖️ 香港係夏季時，澳洲係冬季——澳洲人係聖誕節（12月）過夏天！',
+    autumn: '🍂 香港係秋季時，澳洲係春季——好似香港同澳洲對調咗！',
+    winter: '❄️ 香港係冬季時，澳洲係夏季——澳洲嘅新年（1月）係夏天！',
+  };
 
   function update(){
     const angle = +slider.value;
@@ -545,23 +623,134 @@
     earthEl.style.left = ex + 'px';
     earthEl.style.top  = ey + 'px';
 
-    // Season logic (same as original code logic)
+    // Find closest month
+    const m = monthData.reduce((p,c) => {
+      const da = Math.min(Math.abs(c.a-angle), 360-Math.abs(c.a-angle));
+      const dp = Math.min(Math.abs(p.a-angle), 360-Math.abs(p.a-angle));
+      return da < dp ? c : p;
+    });
+
+    document.getElementById('s3Month').textContent = '📅 ' + m.m;
+
+    // Update HK card
+    const hk = seasonInfo[m.hkS];
+    const hkCard = document.getElementById('hkCard');
+    hkCard.className = 's3-compare-card ' + hk.cls;
+    document.getElementById('hkSeason').textContent = hk.icon + ' ' + hk.name;
+    document.getElementById('hkDesc').textContent = hk.desc;
+
+    // Update AUS card
+    const aus = seasonInfo[m.ausS];
+    const ausCard = document.getElementById('ausCard');
+    ausCard.className = 's3-compare-card ' + aus.cls;
+    document.getElementById('ausSeason').textContent = aus.icon + ' ' + aus.name;
+    document.getElementById('ausDesc').textContent = aus.desc;
+
+    // Fun fact
+    document.getElementById('s3Funfact').textContent = funFacts[m.hkS];
+
+    // Info box
     if(angle > 45 && angle < 135){
       infoBox.className = 's3-infobox summer-n';
-      infoTxt.innerHTML = '☀️ <strong style="color:#ffaa33">北半球：夏季</strong>（陽光直射）<br>❄️ <strong style="color:#88ccff">南半球：冬季</strong>（陽光斜射）';
+      infoTxt.innerHTML = '☀️ <strong style="color:#ffaa33">北半球：夏季</strong>（陽光直射）　❄️ <strong style="color:#88ccff">南半球：冬季</strong>（陽光斜射）';
     } else if(angle > 225 && angle < 315){
       infoBox.className = 's3-infobox winter-n';
-      infoTxt.innerHTML = '❄️ <strong style="color:#88ccff">北半球：冬季</strong>（陽光斜射）<br>☀️ <strong style="color:#ffaa33">南半球：夏季</strong>（陽光直射）';
+      infoTxt.innerHTML = '❄️ <strong style="color:#88ccff">北半球：冬季</strong>（陽光斜射）　☀️ <strong style="color:#ffaa33">南半球：夏季</strong>（陽光直射）';
     } else {
       infoBox.className = 's3-infobox spring-autumn';
       infoTxt.innerHTML = '🌸🍂 <strong style="color:#7edb7e">春季或秋季</strong>：南北半球受熱差唔多';
     }
   }
 
-  if(slider){
-    slider.addEventListener('input', update);
-    requestAnimationFrame(update);
+  if(slider){ slider.addEventListener('input', update); requestAnimationFrame(update); }
+
+  // ── GAME ──
+  const QUESTIONS = [
+    {
+      q: '依家係 12月（聖誕節）🎄，香港係咩季節？',
+      target: 'hk', month: 270,
+      answer: 'winter',
+      choices: ['🌸 春季','☀️ 夏季','🍂 秋季','❄️ 冬季'],
+      correct: 3,
+      explain: '12月香港係冬季，北半球北極背向太陽，陽光最少！'
+    },
+    {
+      q: '同一個 12月（聖誕節），澳洲係咩季節？',
+      target: 'aus', month: 270,
+      answer: 'summer',
+      choices: ['🌸 春季','☀️ 夏季','🍂 秋季','❄️ 冬季'],
+      correct: 1,
+      explain: '12月澳洲係夏季！南半球南極朝向太陽，陽光最多，所以澳洲人係夏天過聖誕節🏖️！'
+    },
+    {
+      q: '依家係 7月（暑假）☀️，澳洲係咩季節？',
+      target: 'aus', month: 120,
+      answer: 'winter',
+      choices: ['🌸 春季','☀️ 夏季','🍂 秋季','❄️ 冬季'],
+      correct: 3,
+      explain: '7月香港係夏季放暑假，但澳洲係冬季！南北半球季節完全相反！'
+    },
+    {
+      q: '依家係 4月（復活節）🐣，香港係咩季節？',
+      target: 'hk', month: 30,
+      answer: 'spring',
+      choices: ['🌸 春季','☀️ 夏季','🍂 秋季','❄️ 冬季'],
+      correct: 0,
+      explain: '4月香港係春季，陽光斜射，氣候溫和——最啱出去玩！🌸'
+    },
+  ];
+
+  let qIdx = 0;
+  let answered = false;
+
+  function loadQuestion(){
+    answered = false;
+    const q = QUESTIONS[qIdx];
+    document.getElementById('gameQuestion').textContent = q.q;
+    const choices = document.getElementById('gameChoices');
+    choices.innerHTML = '';
+    q.choices.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 's3-choice-btn';
+      btn.textContent = c;
+      btn.onclick = () => checkAnswer(i, q);
+      choices.appendChild(btn);
+    });
+    document.getElementById('gameFeedback').style.display = 'none';
+    document.getElementById('gameNextBtn').style.display = 'none';
+    // Auto-set slider to question month
+    if(slider){ slider.value = q.month; slider.dispatchEvent(new Event('input')); }
   }
+
+  function checkAnswer(i, q){
+    if(answered) return;
+    answered = true;
+    const btns = document.querySelectorAll('.s3-choice-btn');
+    btns.forEach((b,idx) => {
+      if(idx === q.correct) b.classList.add('correct');
+      else if(idx === i && i !== q.correct) b.classList.add('wrong');
+      b.style.pointerEvents = 'none';
+    });
+    const fb = document.getElementById('gameFeedback');
+    fb.style.display = 'block';
+    if(i === q.correct){
+      fb.className = 's3-game-feedback correct';
+      fb.innerHTML = '✅ 答對了！' + q.explain;
+    } else {
+      fb.className = 's3-game-feedback wrong';
+      fb.innerHTML = '❌ 唔係喎！正確答案係 ' + q.choices[q.correct] + '。<br>' + q.explain;
+    }
+    const nextBtn = document.getElementById('gameNextBtn');
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = qIdx < QUESTIONS.length-1 ? '下一題 →' : '🔄 重新開始';
+  }
+
+  window.nextQuestion = function(){
+    qIdx = (qIdx + 1) % QUESTIONS.length;
+    loadQuestion();
+  };
+
+  loadQuestion();
 })();
 </script>
 
