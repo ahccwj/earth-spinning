@@ -21,12 +21,12 @@
 
     /* SCENE */
     .scene-wrapper{width:min(680px,96vw);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-    .sky{position:relative;width:100%;height:220px;transition:background .4s;overflow:hidden}
+    .sky{position:relative;width:100%;height:280px;transition:background .4s;overflow:visible}
     .stars{position:absolute;inset:0;transition:opacity .5s}
     .star{position:absolute;background:#fff;border-radius:50%}
-    #sun-scene{position:absolute;width:56px;height:56px;border-radius:50%;
+    #sun-scene{position:absolute;width:160px;height:160px;border-radius:50%;
       background:radial-gradient(circle at 35% 35%,#fff7a0,#ffe44a 55%,#ffb020);
-      box-shadow:0 0 0 10px rgba(255,220,80,.15),0 0 50px 14px rgba(255,180,40,.4);
+      box-shadow:0 0 0 22px rgba(255,220,80,.18),0 0 120px 40px rgba(255,180,40,.55);
       transform:translate(-50%,-50%);transition:left .1s,top .1s,box-shadow .4s,background .4s;z-index:2}
     #sun-scene::after{content:'';position:absolute;inset:-20px;border-radius:50%;
       background:radial-gradient(circle,rgba(255,230,80,.2) 30%,transparent 70%);
@@ -247,8 +247,8 @@
   <div class="scene-wrapper">
     <div class="sky" id="sky">
       <div class="stars" id="stars"></div>
-      <svg class="arc-svg" viewBox="0 0 680 220" preserveAspectRatio="none">
-        <path d="M 34 215 Q 340 -50 646 215" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="6 6"/>
+      <svg class="arc-svg" viewBox="0 0 680 280" preserveAspectRatio="none">
+        <path d="M 34 275 Q 340 -60 646 275" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="6 6"/>
       </svg>
       <div id="sun-scene"></div>
       <div class="horizon-glow" id="horizonGlow"></div>
@@ -284,6 +284,267 @@
     </div>
   </div>
 </section>
+
+
+<section>
+  <div class="section-title">📝 小測驗：自轉與影子</div>
+  <div class="quiz-wrap" id="quizWrap">
+
+    <div class="quiz-progress">
+      <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="quizProgFill"></div></div>
+      <div class="quiz-prog-label" id="quizProgLabel">第 1 題 / 共 6 題</div>
+    </div>
+
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-choices" id="quizChoices"></div>
+      <div class="quiz-feedback" id="quizFeedback" style="display:none"></div>
+      <button class="quiz-next-btn" id="quizNextBtn" style="display:none" onclick="quizNext()">下一題 →</button>
+    </div>
+
+    <div class="quiz-result" id="quizResult" style="display:none">
+      <div class="quiz-result-icon" id="quizResultIcon"></div>
+      <div class="quiz-result-title" id="quizResultTitle"></div>
+      <div class="quiz-result-score" id="quizResultScore"></div>
+      <div class="quiz-result-msg" id="quizResultMsg"></div>
+      <button class="quiz-retry-btn" onclick="quizRetry()">🔄 重新作答</button>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .quiz-wrap{
+    width:min(680px,96vw);
+    background:rgba(255,255,255,.04);
+    border:1.5px solid rgba(255,255,255,.1);
+    border-radius:18px;
+    padding:28px 22px 32px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+
+  /* Progress */
+  .quiz-progress{display:flex;flex-direction:column;gap:6px}
+  .quiz-prog-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+  .quiz-prog-fill{height:100%;background:linear-gradient(to right,#f4a44a,#ffcc66);border-radius:3px;transition:width .4s ease}
+  .quiz-prog-label{font-size:.8rem;opacity:.5;font-family:'Space Mono',monospace;letter-spacing:.05em}
+
+  /* Card */
+  .quiz-card{display:flex;flex-direction:column;gap:16px}
+  .quiz-q{
+    font-size:1.05rem;font-weight:700;
+    line-height:1.7;color:#f5efe6;
+    padding:16px 18px;
+    background:rgba(244,164,74,.08);
+    border-left:4px solid #f4a44a;
+    border-radius:0 12px 12px 0;
+  }
+  .quiz-choices{display:flex;flex-direction:column;gap:10px}
+  .quiz-choice{
+    padding:12px 18px;
+    border-radius:12px;
+    border:1.5px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.05);
+    color:#f5efe6;font-size:.95rem;font-weight:500;
+    cursor:pointer;text-align:left;
+    font-family:'Noto Sans TC',sans-serif;
+    transition:all .2s;line-height:1.5;
+  }
+  .quiz-choice:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35)}
+  .quiz-choice.correct{background:rgba(60,180,60,.2);border-color:#4caf50;color:#a5d6a7;pointer-events:none}
+  .quiz-choice.wrong{background:rgba(200,50,50,.18);border-color:#ef5350;color:#ef9a9a;pointer-events:none}
+  .quiz-choice.reveal{background:rgba(60,180,60,.1);border-color:rgba(76,175,80,.5);pointer-events:none}
+  .quiz-choice.disabled{pointer-events:none;opacity:.6}
+
+  /* Feedback */
+  .quiz-feedback{
+    padding:14px 18px;border-radius:12px;
+    font-size:.92rem;line-height:1.7;font-weight:500;
+  }
+  .quiz-feedback.correct{background:rgba(60,180,60,.15);border:1.5px solid #4caf50;color:#c8e6c9}
+  .quiz-feedback.wrong{background:rgba(200,50,50,.12);border:1.5px solid #ef5350;color:#ffcdd2}
+
+  /* Next button */
+  .quiz-next-btn{
+    align-self:flex-end;
+    padding:10px 24px;border-radius:50px;
+    border:1.5px solid rgba(244,164,74,.5);
+    background:rgba(244,164,74,.12);
+    color:#f4a44a;font-size:.9rem;font-weight:700;
+    cursor:pointer;font-family:inherit;
+    transition:all .2s;
+  }
+  .quiz-next-btn:hover{background:rgba(244,164,74,.25)}
+
+  /* Result */
+  .quiz-result{
+    display:flex;flex-direction:column;align-items:center;
+    gap:12px;padding:12px 0;text-align:center;
+  }
+  .quiz-result-icon{font-size:3.5rem}
+  .quiz-result-title{font-size:1.4rem;font-weight:900;color:#f5efe6}
+  .quiz-result-score{font-size:1rem;opacity:.7;font-family:'Space Mono',monospace}
+  .quiz-result-msg{
+    font-size:.9rem;line-height:1.7;opacity:.7;
+    max-width:440px;
+  }
+  .quiz-retry-btn{
+    margin-top:4px;padding:12px 28px;border-radius:50px;
+    border:1.5px solid rgba(110,198,255,.4);
+    background:rgba(110,198,255,.1);
+    color:#6ec6ff;font-size:.9rem;font-weight:700;
+    cursor:pointer;font-family:inherit;
+  }
+</style>
+
+<script>
+(function(){
+  const QUESTIONS = [
+    {
+      q: '地球每天自轉一圈，需要多少時間？',
+      choices: ['12小時', '24小時', '365天', '30天'],
+      correct: 1,
+      explain: '✅ 正確！地球自轉一圈需要 24 小時，即一天。正因為地球不停自轉，才形成白天和黑夜交替的現象。'
+    },
+    {
+      q: '地球自轉時，面向太陽的一側會是什麼時間？',
+      choices: ['黑夜', '白天', '黃昏', '日落'],
+      correct: 1,
+      explain: '✅ 正確！面向太陽的一側受到陽光照射，因此是白天；背向太陽的一側則是黑夜。'
+    },
+    {
+      q: '香港的白天和黑夜，是因為什麼現象而形成的？',
+      choices: ['太陽繞著地球轉', '地球繞著太陽轉', '地球不停自轉', '月亮遮住太陽'],
+      correct: 2,
+      explain: '✅ 正確！白天和黑夜是由地球的「自轉」形成的，並非太陽移動。地球自轉時，不同地方輪流面向太陽。'
+    },
+    {
+      q: '在一天之中，什麼時候影子最短？',
+      choices: ['早上六時', '正午十二時', '下午三時', '傍晚六時'],
+      correct: 1,
+      explain: '✅ 正確！正午時分，太陽位於最高點，陽光近乎垂直照射，因此影子最短，並指向正北方。'
+    },
+    {
+      q: '早上，太陽從哪個方向升起？影子指向哪個方向？',
+      choices: ['太陽從西升起，影子指向東', '太陽從東升起，影子指向西', '太陽從北升起，影子指向南', '太陽從南升起，影子指向北'],
+      correct: 1,
+      explain: '✅ 正確！太陽從東方升起，光線由東向西照射，因此影子指向西方。影子永遠指向與太陽相反的方向。'
+    },
+    {
+      q: '在一天之中，影子的長度有什麼規律？',
+      choices: [
+        '影子長度不變',
+        '早上長，正午短，下午再變長',
+        '早上短，正午長，下午再變短',
+        '只有早上才有影子'
+      ],
+      correct: 1,
+      explain: '✅ 正確！太陽在早上和傍晚角度較低，影子較長；正午太陽最高，影子最短。這是因為太陽光照射角度不斷改變的緣故。'
+    },
+  ];
+
+  let current = 0;
+  let score = 0;
+  let answered = false;
+
+  function render() {
+    const q = QUESTIONS[current];
+    document.getElementById('quizQ').textContent = q.q;
+    document.getElementById('quizFeedback').style.display = 'none';
+    document.getElementById('quizNextBtn').style.display = 'none';
+    answered = false;
+
+    // Progress
+    const pct = (current / QUESTIONS.length) * 100;
+    document.getElementById('quizProgFill').style.width = pct + '%';
+    document.getElementById('quizProgLabel').textContent =
+      '第 ' + (current + 1) + ' 題 / 共 ' + QUESTIONS.length + ' 題';
+
+    // Choices
+    const box = document.getElementById('quizChoices');
+    box.innerHTML = '';
+    q.choices.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-choice';
+      btn.textContent = c;
+      btn.onclick = () => answer(i, q);
+      box.appendChild(btn);
+    });
+  }
+
+  function answer(i, q) {
+    if (answered) return;
+    answered = true;
+    const btns = document.querySelectorAll('.quiz-choice');
+    btns.forEach((b, idx) => {
+      if (idx === q.correct) b.classList.add('correct');
+      else if (idx === i && i !== q.correct) b.classList.add('wrong');
+      else b.classList.add('disabled');
+    });
+
+    const fb = document.getElementById('quizFeedback');
+    const next = document.getElementById('quizNextBtn');
+    fb.style.display = 'block';
+
+    if (i === q.correct) {
+      score++;
+      fb.className = 'quiz-feedback correct';
+      fb.innerHTML = q.explain;
+    } else {
+      fb.className = 'quiz-feedback wrong';
+      fb.innerHTML = '❌ 答案不正確。正確答案是「' + q.choices[q.correct] + '」。<br>' + q.explain.replace('✅ 正確！', '');
+    }
+
+    next.style.display = 'block';
+    next.textContent = current < QUESTIONS.length - 1 ? '下一題 →' : '查看成績 📊';
+  }
+
+  window.quizNext = function() {
+    current++;
+    if (current >= QUESTIONS.length) {
+      showResult();
+    } else {
+      render();
+    }
+  };
+
+  function showResult() {
+    document.getElementById('quizCard').style.display = 'none';
+    document.getElementById('quizProgFill').style.width = '100%';
+    document.getElementById('quizProgLabel').textContent = '測驗完成！';
+    const result = document.getElementById('quizResult');
+    result.style.display = 'flex';
+
+    const pct = score / QUESTIONS.length;
+    let icon, title, msg;
+    if (pct === 1) {
+      icon = '🏆'; title = '全部答對！非常出色！';
+      msg = '你對地球自轉和影子變化的概念掌握得非常好，繼續加油！';
+    } else if (pct >= 0.67) {
+      icon = '🌟'; title = '答得不錯！';
+      msg = '你已掌握大部分概念，再溫習一下錯誤的題目，你一定可以全部答對！';
+    } else {
+      icon = '📖'; title = '繼續努力！';
+      msg = '建議你重新觀看上方的模擬動畫，再試一次，相信你可以做得更好！';
+    }
+
+    document.getElementById('quizResultIcon').textContent = icon;
+    document.getElementById('quizResultTitle').textContent = title;
+    document.getElementById('quizResultScore').textContent =
+      '你答對了 ' + score + ' / ' + QUESTIONS.length + ' 題';
+    document.getElementById('quizResultMsg').textContent = msg;
+  }
+
+  window.quizRetry = function() {
+    current = 0; score = 0; answered = false;
+    document.getElementById('quizCard').style.display = 'flex';
+    document.getElementById('quizResult').style.display = 'none';
+    render();
+  };
+
+  render();
+})();
+</script>
 
 <div class="divider"></div>
 
@@ -790,7 +1051,7 @@
   const groundEl  = document.getElementById('ground');
   const hGlow     = document.getElementById('horizonGlow');
   const shadowEl  = document.getElementById('chars-shadow');
-  const W = 680, H = 220, M = 34;
+  const W = 680, H = 280, M = 34;
 
   function lerp(a,b,t){ return a+(b-a)*t; }
   function lc(a,b,t){ return [Math.round(lerp(a[0],b[0],t)),Math.round(lerp(a[1],b[1],t)),Math.round(lerp(a[2],b[2],t))]; }
