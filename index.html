@@ -241,6 +241,132 @@
 })();
 </script>
 
+
+<section>
+  <div class="section-title">📝 小測驗：地球自轉</div>
+  <div class="quiz-wrap" id="quiz1Wrap">
+    <div class="quiz-progress">
+      <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="quiz1ProgFill"></div></div>
+      <div class="quiz-prog-label" id="quiz1ProgLabel">第 1 題 / 共 4 題</div>
+    </div>
+    <div class="quiz-card" id="quiz1Card">
+      <div class="quiz-q" id="quiz1Q"></div>
+      <div class="quiz-choices" id="quiz1Choices"></div>
+      <div class="quiz-feedback" id="quiz1Feedback" style="display:none"></div>
+      <button class="quiz-next-btn" id="quiz1NextBtn" style="display:none" onclick="quiz1Next()">下一題 →</button>
+    </div>
+    <div class="quiz-result" id="quiz1Result" style="display:none">
+      <div class="quiz-result-icon" id="quiz1ResultIcon"></div>
+      <div class="quiz-result-title" id="quiz1ResultTitle"></div>
+      <div class="quiz-result-score" id="quiz1ResultScore"></div>
+      <div class="quiz-result-msg" id="quiz1ResultMsg"></div>
+      <button class="quiz-retry-btn" onclick="quiz1Retry()">🔄 重新作答</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const QUESTIONS = [
+    {
+      q: '為什麼地球會有白天和黑夜？',
+      choices: ['太陽消失了', '太陽繞著地球轉', '地球不停自轉', '月亮遮住了太陽'],
+      correct: 2,
+      explain: '✅ 正確！白天和黑夜是由地球「自轉」形成的。地球自轉時，面向太陽的一側是白天，背向太陽的一側是黑夜。太陽並沒有消失！'
+    },
+    {
+      q: '地球自轉一圈需要多少時間？',
+      choices: ['12小時', '24小時', '365天', '30天'],
+      correct: 1,
+      explain: '✅ 正確！地球自轉一圈需要 24 小時，即一天。正因如此，每天都有一次白天和一次黑夜。'
+    },
+    {
+      q: '當香港（紅點）面向太陽時，香港是什麼時間？',
+      choices: ['黑夜', '白天', '黃昏', '日出'],
+      correct: 1,
+      explain: '✅ 正確！面向太陽的一側受到陽光照射，因此是白天。背向太陽的一側沒有陽光，是黑夜。'
+    },
+    {
+      q: '地球在自轉的時候，我們站在地球上能感受到嗎？',
+      choices: ['能感受到，地球轉得很快', '不能感受到，因為地球轉得非常慢', '只有在海邊才能感受到', '晚上才能感受到'],
+      correct: 1,
+      explain: '✅ 正確！地球自轉的速度非常緩慢，我們站在地球上完全感受不到。雖然地球每時每刻都在轉動，但一圈需要整整24小時。'
+    },
+  ];
+
+  let cur = 0, score = 0, answered = false;
+
+  function render() {
+    const q = QUESTIONS[cur];
+    document.getElementById('quiz1Q').textContent = q.q;
+    document.getElementById('quiz1Feedback').style.display = 'none';
+    document.getElementById('quiz1NextBtn').style.display = 'none';
+    answered = false;
+    const pct = (cur / QUESTIONS.length) * 100;
+    document.getElementById('quiz1ProgFill').style.width = pct + '%';
+    document.getElementById('quiz1ProgLabel').textContent = '第 ' + (cur+1) + ' 題 / 共 ' + QUESTIONS.length + ' 題';
+    const box = document.getElementById('quiz1Choices');
+    box.innerHTML = '';
+    q.choices.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-choice';
+      btn.textContent = c;
+      btn.onclick = () => answer(i, q);
+      box.appendChild(btn);
+    });
+  }
+
+  function answer(i, q) {
+    if (answered) return;
+    answered = true;
+    document.querySelectorAll('#quiz1Choices .quiz-choice').forEach((b, idx) => {
+      if (idx === q.correct) b.classList.add('correct');
+      else if (idx === i && i !== q.correct) b.classList.add('wrong');
+      else b.classList.add('disabled');
+    });
+    if (i === q.correct) score++;
+    const fb = document.getElementById('quiz1Feedback');
+    fb.style.display = 'block';
+    fb.className = i === q.correct ? 'quiz-feedback correct' : 'quiz-feedback wrong';
+    fb.innerHTML = i === q.correct ? q.explain :
+      '❌ 答案不正確。正確答案是「' + q.choices[q.correct] + '」。<br>' + q.explain.replace('✅ 正確！','');
+    const nb = document.getElementById('quiz1NextBtn');
+    nb.style.display = 'block';
+    nb.textContent = cur < QUESTIONS.length-1 ? '下一題 →' : '查看成績 📊';
+  }
+
+  window.quiz1Next = function() {
+    cur++;
+    if (cur >= QUESTIONS.length) {
+      document.getElementById('quiz1Card').style.display = 'none';
+      document.getElementById('quiz1ProgFill').style.width = '100%';
+      document.getElementById('quiz1ProgLabel').textContent = '測驗完成！';
+      const r = document.getElementById('quiz1Result');
+      r.style.display = 'flex';
+      const pct = score / QUESTIONS.length;
+      const icon = pct===1 ? '🏆' : pct>=0.75 ? '🌟' : '📖';
+      const title = pct===1 ? '全部答對！非常出色！' : pct>=0.75 ? '答得不錯！' : '繼續努力！';
+      const msg = pct===1 ? '你完全掌握地球自轉的概念，繼續加油！'
+                : pct>=0.75 ? '你已掌握大部分概念，再溫習一下錯誤的題目！'
+                : '建議你重新觀看上方的自轉動畫，再試一次！';
+      document.getElementById('quiz1ResultIcon').textContent = icon;
+      document.getElementById('quiz1ResultTitle').textContent = title;
+      document.getElementById('quiz1ResultScore').textContent = '你答對了 ' + score + ' / ' + QUESTIONS.length + ' 題';
+      document.getElementById('quiz1ResultMsg').textContent = msg;
+    } else { render(); }
+  };
+
+  window.quiz1Retry = function() {
+    cur = 0; score = 0; answered = false;
+    document.getElementById('quiz1Card').style.display = 'flex';
+    document.getElementById('quiz1Result').style.display = 'none';
+    render();
+  };
+
+  render();
+})();
+</script>
+
 <div class="divider"></div>
 <section>
   <div class="section-title">🌤️ 第二部分：太陽和影子</div>
